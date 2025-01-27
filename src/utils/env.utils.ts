@@ -1,17 +1,17 @@
-type EnvPrefix = "REACT_APP_" | "VITE_";
-type SpecialEnvKeys = "PUBLIC_URL";
+export type EnvPrefix = "REACT_APP_" | "VITE_";
+export type SpecialEnvKeys = "PUBLIC_URL";
 
-interface EnvironmentConfig {
+export interface EnvironmentConfig {
   readonly [key: string]: string;
 }
 
-interface EnvironmentProtocol {
+export interface EnvironmentProtocol {
   getReactEnvironmentConfig(): EnvironmentConfig;
   getDotEnvConfig(): EnvironmentConfig;
   getEnvByPrefix(prefix: EnvPrefix): EnvironmentConfig;
 }
 
-class EnvironmentUtils implements EnvironmentProtocol {
+export class EnvironmentUtils implements EnvironmentProtocol {
   private readonly environmentPrefixes: readonly EnvPrefix[] = [
     "REACT_APP_",
     "VITE_",
