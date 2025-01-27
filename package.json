@@ -25,6 +25,9 @@
   "files": [
     "dist"
   ],
+  "bin": {
+    "dynamic-env": "./dist/cli.cjs"
+  },
   "scripts": {
     "build": "rslib build",
     "check": "biome check --write",
