@@ -12,6 +12,14 @@ export interface FileOutputHandler {
     config: Record<string, string>,
     varName: string
   ): Promise<FileOperationResult>;
+  copyFolder(
+    directory: string,
+    destination: string
+  ): Promise<FileOperationResult>;
+  replaceFilesInDirectory(
+    directoryPath: string,
+    environmentConfig: Record<string, string>
+  ): Promise<FileOperationResult[]>;
 }
 
 export interface MotionParameters {

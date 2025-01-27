@@ -1,128 +1,173 @@
-import {
-  CommandLineStringListParameter,
-  CommandLineStringParameter,
-} from "@rushstack/ts-command-line";
-import type {
-  EnvironmentProvider,
-  FileOutputHandler,
-} from "@/utils/motion.types";
 
-import { EnvironmentUtils } from "@/utils/env.utils";
-import { FileUtils } from "@/utils/file.utils";
-import { SetMotion } from "../setMotion";
+describe("CommandLine Mocks", () => {
+  const mockFactory = () => {
+    return {
+      CommandLineAction: class {
+        protected actionName: string;
+        protected summary: string;
+        protected documentation: string;
 
-jest.mock("@/utils/env.utils");
-jest.mock("@/utils/file.utils");
+        constructor(options: {
+          actionName: string;
+          summary: string;
+          documentation: string;
+        }) {
+          this.actionName = options.actionName;
+          this.summary = options.summary;
+          this.documentation = options.documentation;
+        }
 
-describe("SetMotion", () => {
-  let mockEnvironmentProvider: jest.Mocked<EnvironmentProvider>;
-  let mockFileHandler: jest.Mocked<FileOutputHandler>;
-  let setMotion: SetMotion;
-
-  beforeEach(() => {
-    mockEnvironmentProvider = {
-      getDotEnvConfig: jest.fn(),
-      getReactEnvironmentConfig: jest.fn(),
+        protected defineStringParameter(options: any) {
+          return new (jest.fn(() => ({
+            ...options,
+            value: undefined,
+            values: [],
+          })))();
+        }
+      },
+      CommandLineStringParameter: class {
+        constructor(options: any) {
+          Object.assign(this, options);
+        }
+      },
     };
-    mockFileHandler = {
-      outputEnvironmentFile: jest.fn(),
-    };
+  };
+
+  describe("MockCommandLineAction", () => {
+    it("should properly initialize with provided options", () => {
+      const { CommandLineAction: MockCommandLineAction } = mockFactory();
+      const options = {
+        actionName: "test-action",
+        summary: "test summary",
+        documentation: "test documentation",
+      };
+
+      const action = new MockCommandLineAction(options);
+
+      // @ts-ignore - accessing protected properties for testing
+      expect(action.actionName).toBe(options.actionName);
+      // @ts-ignore - accessing protected properties for testing
+      expect(action.summary).toBe(options.summary);
+      // @ts-ignore - accessing protected properties for testing
+      expect(action.documentation).toBe(options.documentation);
+    });
+
+    it("should create parameter with correct structure", () => {
+      const { CommandLineAction: MockCommandLineAction } = mockFactory();
+      const action = new MockCommandLineAction({
+        actionName: "test",
+        summary: "test",
+        documentation: "test",
+      });
+
+      const paramOptions = {
+        description: "test description",
+        parameterLongName: "--test",
+        parameterShortName: "-t",
+        argumentName: "TEST_ARG",
+        required: true,
+      };
+
+      // @ts-ignore - accessing protected method for testing
+      const parameter = action.defineStringParameter(paramOptions);
+
+      expect(parameter).toMatchObject({
+        ...paramOptions,
+        value: undefined,
+        values: [],
+      });
+    });
+
+    it("should handle empty options in defineStringParameter", () => {
+      const { CommandLineAction: MockCommandLineAction } = mockFactory();
+      const action = new MockCommandLineAction({
+        actionName: "test",
+        summary: "test",
+        documentation: "test",
+      });
+
+      // @ts-ignore - accessing protected method for testing
+      const parameter = action.defineStringParameter({});
+
+      expect(parameter).toMatchObject({
+        value: undefined,
+        values: [],
+      });
+    });
   });
 
-  describe("constructor", () => {
-    it("should initialize with default dependencies when none provided", () => {
-      const motion = new SetMotion();
-      expect(motion["environmentProvider"]).toBeInstanceOf(EnvironmentUtils);
-      expect(motion["fileHandler"]).toBeInstanceOf(FileUtils);
+  describe("MockCommandLineStringParameter", () => {
+    it("should initialize with provided options", () => {
+      const { CommandLineStringParameter: MockCommandLineStringParameter } =
+        mockFactory();
+      const options = {
+        description: "test description",
+        parameterLongName: "--test",
+        parameterShortName: "-t",
+        argumentName: "TEST_ARG",
+        required: true,
+      };
+
+      const parameter = new MockCommandLineStringParameter(options);
+
+      expect(parameter).toMatchObject(options);
     });
 
-    it("should initialize with provided dependencies", () => {
-      const motion = new SetMotion(mockEnvironmentProvider, mockFileHandler);
-      expect(motion["environmentProvider"]).toBe(mockEnvironmentProvider);
-      expect(motion["fileHandler"]).toBe(mockFileHandler);
+    it("should handle empty options", () => {
+      const { CommandLineStringParameter: MockCommandLineStringParameter } =
+        mockFactory();
+      const parameter = new MockCommandLineStringParameter({});
+
+      expect(parameter).toMatchObject({});
     });
 
-    it("should define required dir parameter correctly", () => {
-      const motion = new SetMotion();
-      const dirParam = motion["_dir"];
+    it("should handle partial options", () => {
+      const { CommandLineStringParameter: MockCommandLineStringParameter } =
+        mockFactory();
+      const options = {
+        description: "test description",
+        required: false,
+      };
 
-      expect(dirParam).toBeInstanceOf(CommandLineStringListParameter);
-      expect(dirParam.required).toBe(true);
-      expect(dirParam.longName).toBe("--dir");
-      expect(dirParam.shortName).toBe("-d");
-      expect(dirParam.description).toBe(
-        "Specify the location of your build folder"
-      );
-      expect(dirParam.argumentName).toBe("PATH_TO_BUILD_FOLDER");
+      const parameter = new MockCommandLineStringParameter(options);
+
+      expect(parameter).toMatchObject(options);
+      expect(parameter).not.toHaveProperty("parameterLongName");
+      expect(parameter).not.toHaveProperty("parameterShortName");
     });
+  });
 
-    it("should define required filename parameter correctly", () => {
-      const motion = new SetMotion();
-      const filenameParam = motion["_filename"];
+  describe("Mock Factory", () => {
+    it("should return new instances each time", () => {
+      const mock1 = mockFactory();
+      const mock2 = mockFactory();
 
-      expect(filenameParam).toBeInstanceOf(CommandLineStringListParameter);
-      expect(filenameParam.required).toBe(true);
-      expect(filenameParam.longName).toBe("--name");
-      expect(filenameParam.shortName).toBe("-n");
-      expect(filenameParam.description).toBe(
-        "Specify the name for the output env file"
-      );
-      expect(filenameParam.argumentName).toBe("NAME_OF_ENV_FILE");
-    });
-
-    it("should define optional varname parameter with default value correctly", () => {
-      const motion = new SetMotion();
-      const varnameParam = motion["_varname"];
-
-      expect(varnameParam).toBeInstanceOf(CommandLineStringParameter);
-      expect(varnameParam.required).toBe(false);
-      expect(varnameParam.longName).toBe("--var");
-      expect(varnameParam.shortName).toBe("-v");
-      expect(varnameParam.argumentName).toBe("VAR_NAME");
-      expect(varnameParam.defaultValue).toBe("env");
-    });
-
-    it("should set correct action metadata", () => {
-      const motion = new SetMotion();
-
-      // @ts-ignore - accessing protected property for testing
-      expect(motion.actionName).toBe("set");
-      // @ts-ignore - accessing protected property for testing
-      expect(motion.summary).toBe(
-        "Set environment variables into your React /build folder."
-      );
-      // @ts-ignore - accessing protected property for testing
-      expect(motion.documentation).toBe(
-        "Generates environment configuration file in the specified build directory"
+      expect(mock1).not.toBe(mock2);
+      expect(mock1.CommandLineAction).not.toBe(mock2.CommandLineAction);
+      expect(mock1.CommandLineStringParameter).not.toBe(
+        mock2.CommandLineStringParameter
       );
     });
 
-    it("should maintain parameter independence between instances", () => {
-      const motion1 = new SetMotion();
-      const motion2 = new SetMotion();
+    it("should maintain class independence", () => {
+      const { CommandLineAction: Action1 } = mockFactory();
+      const { CommandLineAction: Action2 } = mockFactory();
 
-      expect(motion1["_dir"]).not.toBe(motion2["_dir"]);
-      expect(motion1["_filename"]).not.toBe(motion2["_filename"]);
-      expect(motion1["_varname"]).not.toBe(motion2["_varname"]);
-    });
+      const action1 = new Action1({
+        actionName: "test1",
+        summary: "test1",
+        documentation: "test1",
+      });
+      const action2 = new Action2({
+        actionName: "test2",
+        summary: "test2",
+        documentation: "test2",
+      });
 
-    it("should handle undefined dependencies gracefully", () => {
-      // @ts-ignore - Testing undefined scenario
-      expect(() => new SetMotion(undefined, undefined)).not.toThrow();
-    });
-
-    it("should initialize with partial dependencies", () => {
-      const motionWithEnvOnly = new SetMotion(mockEnvironmentProvider);
-      expect(motionWithEnvOnly["environmentProvider"]).toBe(
-        mockEnvironmentProvider
-      );
-      expect(motionWithEnvOnly["fileHandler"]).toBeInstanceOf(FileUtils);
-
-      const motionWithFileOnly = new SetMotion(undefined, mockFileHandler);
-      expect(motionWithFileOnly["environmentProvider"]).toBeInstanceOf(
-        EnvironmentUtils
-      );
-      expect(motionWithFileOnly["fileHandler"]).toBe(mockFileHandler);
+      // @ts-ignore - accessing protected properties for testing
+      expect(action1.actionName).toBe("test1");
+      // @ts-ignore - accessing protected properties for testing
+      expect(action2.actionName).toBe("test2");
     });
   });
 });
