@@ -30,6 +30,7 @@ describe("InjectMotion", () => {
       getReactEnvironmentConfig: jest.fn(),
     };
     mockFileHandler = {
+      executeBuildCommand: jest.fn(),
       outputEnvironmentFile: jest.fn(),
       copyFolder: jest.fn(),
       replaceFilesInDirectory: jest.fn(),

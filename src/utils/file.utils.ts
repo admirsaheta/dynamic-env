@@ -8,6 +8,9 @@ import { copyFile, mkdir, readFile, writeFile } from "fs/promises";
 import { existsSync, readdirSync, statSync } from "fs";
 import { join, resolve } from "path";
 
+import { exec } from "child_process";
+import { promisify } from "util";
+
 export interface FileProtocol {
   fromTo(environmentConfig: Record<string, string>): ReplacementPattern;
   copyFolder(
@@ -179,6 +182,46 @@ export class FileUtils implements FileProtocol {
         success: false,
         path: resolve(folder, fileName),
         error: error as Error,
+      };
+    }
+  }
+  public async executeBuildCommand(
+    command: string,
+    config: Record<string, string>,
+    bypassVars: string[]
+  ): Promise<FileOperationResult> {
+    try {
+      const execAsync = promisify(exec);
+      const envVars = { ...process.env };
+
+      // Add bypass variables to environment
+      bypassVars.forEach((key) => {
+        if (config[key]) {
+          envVars[key] = config[key];
+        }
+      });
+
+      const { stdout, stderr } = await execAsync(command, {
+        env: envVars,
+      });
+
+      if (stderr) {
+        return {
+          success: false,
+          error: new Error(stderr),
+          path: process.cwd(),
+        };
+      }
+
+      return {
+        success: true,
+        path: process.cwd(),
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error : new Error(String(error)),
+        path: process.cwd(),
       };
     }
   }
