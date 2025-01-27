@@ -1,14 +1,10 @@
-import {
-  CommandLineChoiceParameter,
-  CommandLineRemainder,
-  CommandLineStringListParameter,
-} from "@rushstack/ts-command-line";
 import type {
   EnvironmentProvider,
   FileOutputHandler,
 } from "@/utils/motion.types";
 
-import { BuildMotion } from "../buildMotion";
+import { BuildMotion } from "@/motions/build.motion";
+import { CommandLineRemainder } from "@rushstack/ts-command-line";
 import { EnvironmentUtils } from "@/utils/env.utils";
 import { FileUtils } from "@/utils/file.utils";
 import { ParsingUtils } from "@/utils/parse.utils";

@@ -3,10 +3,9 @@ import type {
   FileOutputHandler,
 } from "@/utils/motion.types";
 
-import { CommandLineStringParameter } from "@rushstack/ts-command-line";
 import { EnvironmentUtils } from "@/utils/env.utils";
 import { FileUtils } from "@/utils/file.utils";
-import { InjectMotion } from "../injectMotion";
+import { InjectMotion } from "@/motions/inject.motion";
 
 jest.mock("@/utils/env.utils");
 jest.mock("@/utils/file.utils");
