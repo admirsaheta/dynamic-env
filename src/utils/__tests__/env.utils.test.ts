@@ -1,4 +1,4 @@
-import { EnvironmentUtils } from "../env.utils";
+import { EnvironmentUtils } from "@/utils/env.utils";
 
 describe("EnvironmentUtils", () => {
   describe("getReactEnvironmentConfig", () => {

@@ -1,9 +1,8 @@
-export type EnvPrefix = "REACT_APP_" | "VITE_";
-export type SpecialEnvKeys = "PUBLIC_URL";
-
-export interface EnvironmentConfig {
-  readonly [key: string]: string;
-}
+import {
+  type EnvPrefix,
+  type EnvironmentConfig,
+  type SpecialEnvKeys,
+} from "@/types/env.types";
 
 export interface EnvironmentProtocol {
   getReactEnvironmentConfig(): EnvironmentConfig;
