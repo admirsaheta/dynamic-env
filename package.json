@@ -31,5 +31,8 @@
     "ts-jest": "^29.2.5",
     "typescript": "^5.7.3"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@rushstack/ts-command-line": "^4.23.3"
+  }
 }
