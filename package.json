@@ -7,6 +7,16 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./cli": {
+      "types": "./dist/cli.d.ts",
+      "import": "./dist/cli.js",
+      "require": "./dist/cli.cjs"
+    },
+    "./inject": {
+      "types": "./dist/inject.env.d.ts",
+      "import": "./dist/inject.env.js",
+      "require": "./dist/inject.env.cjs"
     }
   },
   "main": "./dist/index.cjs",
