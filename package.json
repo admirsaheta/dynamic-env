@@ -1,5 +1,5 @@
 {
-  "name": "dynamic-env",
+  "name": "@spacier/dynamic-env",
   "version": "1.0.0",
   "type": "module",
   "exports": {

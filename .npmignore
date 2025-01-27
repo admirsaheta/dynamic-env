@@ -1,0 +1,40 @@
+# Source
+src/
+tests/
+__tests__/
+*.test.ts
+*.spec.ts
+
+# Config files
+.gitignore
+.npmignore
+biome.json
+jest.config.js
+rslib.config.ts
+tsconfig.json
+*.config.js
+*.config.ts
+
+# Development
+.vscode/
+.idea/
+.DS_Store
+*.log
+*.local
+
+# Build artifacts
+coverage/
+node_modules/
+bun.lockb
+
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# TypeScript source maps
+*.map
+
+# Environment
+.env*
