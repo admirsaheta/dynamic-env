@@ -1,6 +1,5 @@
 import {
   CommandLineAction,
-  CommandLineStringListParameter,
   CommandLineStringParameter,
 } from "@rushstack/ts-command-line";
 import type {
@@ -13,8 +12,8 @@ import { EnvironmentUtils } from "@/utils/env.utils";
 import { FileUtils } from "@/utils/file.utils";
 
 export class SetMotion extends CommandLineAction implements MotionParameters {
-  private readonly _dir: CommandLineStringListParameter;
-  private readonly _filename: CommandLineStringListParameter;
+  private readonly _dir: CommandLineStringParameter;
+  private readonly _filename: CommandLineStringParameter;
   private readonly _varname: CommandLineStringParameter;
 
   private readonly environmentProvider: EnvironmentProvider;
@@ -34,20 +33,22 @@ export class SetMotion extends CommandLineAction implements MotionParameters {
     this.environmentProvider = environmentProvider;
     this.fileHandler = fileHandler;
 
-    this._dir = this.defineStringListParameter({
+    this._dir = this.defineStringParameter({
       description: "Specify the location of your build folder",
       parameterLongName: "--dir",
       parameterShortName: "-d",
       argumentName: "PATH_TO_BUILD_FOLDER",
+      defaultValue: "./build",
       required: true,
     });
 
-    this._filename = this.defineStringListParameter({
+    this._filename = this.defineStringParameter({
       description: "Specify the name for the output env file",
       parameterLongName: "--name",
       parameterShortName: "-n",
       argumentName: "NAME_OF_ENV_FILE",
       required: true,
+      defaultValue: "env.js",
     });
 
     this._varname = this.defineStringParameter({
@@ -61,17 +62,11 @@ export class SetMotion extends CommandLineAction implements MotionParameters {
   }
 
   get dir(): string {
-    if (!this._dir.values?.[0]) {
-      throw new Error("Build directory path is required");
-    }
-    return this._dir.values[0];
+    return this._dir.value || "./build";
   }
 
   get fileName(): string {
-    if (!this._filename.values?.[0]) {
-      throw new Error("Output filename is required");
-    }
-    return this._filename.values[0];
+    return this._filename.value || "env.js";
   }
 
   get varName(): string {
@@ -82,11 +77,26 @@ export class SetMotion extends CommandLineAction implements MotionParameters {
 
   protected async onExecute(): Promise<void> {
     try {
-      const envConfig = await this.getEnvironmentConfig();
+      const allEnvConfig = await this.getEnvironmentConfig();
+
+      const filteredConfig = Object.entries(allEnvConfig).reduce(
+        (acc, [key, value]) => {
+          if (
+            key.startsWith("VITE_") ||
+            key.startsWith("REACT_APP_") ||
+            key === "PUBLIC_URL"
+          ) {
+            acc[key] = value;
+          }
+          return acc;
+        },
+        {} as Record<string, string>
+      );
+
       const result = await this.fileHandler.outputEnvironmentFile(
         this.dir,
         this.fileName,
-        envConfig,
+        filteredConfig,
         this.varName
       );
 

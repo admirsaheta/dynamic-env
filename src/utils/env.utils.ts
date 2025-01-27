@@ -24,29 +24,37 @@ export class EnvironmentUtils implements EnvironmentProtocol {
   }
 
   public getReactEnvironmentConfig(): EnvironmentConfig {
-    const envEntries = Object.entries(this.processEnv)
-      .filter(
-        ([key]) =>
-          this.environmentPrefixes.some((prefix) => key.startsWith(prefix)) ||
-          this.specialKeys.includes(key as SpecialEnvKeys)
-      )
-      .filter((entry): entry is [string, string] => {
-        const value = entry[1];
-        return value !== undefined && value !== null;
-      });
+    const envVars: Record<string, string> = {};
 
-    return Object.freeze(Object.fromEntries(envEntries));
+    for (const [key, value] of Object.entries(this.processEnv)) {
+      const isEnvVar = this.environmentPrefixes.some((prefix) =>
+        key.startsWith(prefix)
+      );
+      const isSpecialKey = this.specialKeys.includes(key as SpecialEnvKeys);
+
+      if ((isEnvVar || isSpecialKey) && value !== undefined) {
+        envVars[key] = value;
+      }
+    }
+
+    return envVars;
   }
 
   public getDotEnvConfig(): EnvironmentConfig {
-    const envEntries = Object.entries(this.processEnv).filter(
-      (entry): entry is [string, string] => {
-        const value = entry[1];
-        return value !== undefined && value !== null;
-      }
-    );
+    const envVars: Record<string, string> = {};
 
-    return Object.freeze(Object.fromEntries(envEntries));
+    for (const [key, value] of Object.entries(this.processEnv)) {
+      const isEnvVar = this.environmentPrefixes.some((prefix) =>
+        key.startsWith(prefix)
+      );
+      const isSpecialKey = this.specialKeys.includes(key as SpecialEnvKeys);
+
+      if ((isEnvVar || isSpecialKey) && value !== undefined) {
+        envVars[key] = value;
+      }
+    }
+
+    return envVars;
   }
 
   public getEnvByPrefix(prefix: EnvPrefix): EnvironmentConfig {

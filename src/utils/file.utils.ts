@@ -5,8 +5,8 @@ import type {
   ReplacementPattern,
 } from "@/types/file.types";
 import { copyFile, mkdir, readFile, writeFile } from "fs/promises";
+import { dirname, join, resolve } from "path";
 import { existsSync, readdirSync, statSync } from "fs";
-import { join, resolve } from "path";
 
 import { exec } from "child_process";
 import { promisify } from "util";
@@ -164,24 +164,20 @@ export class FileUtils implements FileProtocol {
   public async outputEnvironmentFile(
     folder: string,
     fileName: string,
-    environmentConfig: Record<string, string>,
-    varname: string
+    config: Record<string, string>,
+    varName: string = "env"
   ): Promise<FileOperationResult> {
     try {
-      const fullPath = resolve(folder, fileName);
-      await mkdir(folder, { recursive: true });
-      const content = `window.${varname} = ${JSON.stringify(
-        environmentConfig,
-        null,
-        2
-      )}`;
-      await writeFile(fullPath, content, "utf-8");
-      return { success: true, path: fullPath };
+      const content = `window.${varName} = ${JSON.stringify(config, null, 2)};`;
+      const filePath = join(folder, fileName);
+      await mkdir(dirname(filePath), { recursive: true });
+      await writeFile(filePath, content, "utf-8");
+      return { success: true, path: filePath };
     } catch (error) {
       return {
         success: false,
-        path: resolve(folder, fileName),
-        error: error as Error,
+        path: join(folder, fileName),
+        error: error instanceof Error ? error : new Error(String(error)),
       };
     }
   }

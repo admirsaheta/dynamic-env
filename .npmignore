@@ -4,6 +4,7 @@ tests/
 __tests__/
 *.test.ts
 *.spec.ts
+examples/
 
 # Config files
 .gitignore
@@ -26,7 +27,6 @@ tsconfig.json
 coverage/
 node_modules/
 bun.lockb
-
 
 # Documentation
 docs/
