@@ -4,12 +4,12 @@ import type {
   FileReplacementStrategy,
   ReplacementPattern,
 } from "@/types/file.types";
-import { copyFile, mkdir, readFile, writeFile } from "fs/promises";
-import { dirname, join, resolve } from "path";
-import { existsSync, readdirSync, statSync } from "fs";
+import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { existsSync, readdirSync, statSync } from "node:fs";
 
-import { exec } from "child_process";
-import { promisify } from "util";
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
 
 export interface FileProtocol {
   fromTo(environmentConfig: Record<string, string>): ReplacementPattern;
@@ -165,7 +165,7 @@ export class FileUtils implements FileProtocol {
     folder: string,
     fileName: string,
     config: Record<string, string>,
-    varName: string = "env"
+    varName = "env"
   ): Promise<FileOperationResult> {
     try {
       const content = `window.${varName} = ${JSON.stringify(config, null, 2)};`;
@@ -190,14 +190,13 @@ export class FileUtils implements FileProtocol {
       const execAsync = promisify(exec);
       const envVars = { ...process.env };
 
-      // Add bypass variables to environment
-      bypassVars.forEach((key) => {
+      for (const key of bypassVars) {
         if (config[key]) {
           envVars[key] = config[key];
         }
-      });
+      }
 
-      const { stdout, stderr } = await execAsync(command, {
+      const { stderr } = await execAsync(command, {
         env: envVars,
       });
 

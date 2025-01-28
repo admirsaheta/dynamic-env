@@ -1,6 +1,6 @@
 import {
   CommandLineAction,
-  CommandLineStringParameter,
+  type CommandLineStringParameter,
 } from "@rushstack/ts-command-line";
 import type {
   EnvironmentProvider,

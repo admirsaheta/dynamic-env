@@ -1,7 +1,7 @@
-import {
-  type EnvPrefix,
-  type EnvironmentConfig,
-  type SpecialEnvKeys,
+import type {
+  EnvPrefix,
+  EnvironmentConfig,
+  SpecialEnvKeys,
 } from "@/types/env.types";
 
 export interface EnvironmentProtocol {

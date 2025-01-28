@@ -1,6 +1,6 @@
 import {
   CommandLineAction,
-  CommandLineStringParameter,
+  type CommandLineStringParameter,
 } from "@rushstack/ts-command-line";
 import type {
   EnvironmentProvider,
@@ -83,11 +83,11 @@ export class InjectMotion
         envConfig
       );
 
-      if (result.some((r: { success: any }) => !r.success)) {
-        const failures = result.filter((r: { success: any }) => !r.success);
+      if (result.some((r: { success: unknown }) => !r.success)) {
+        const failures = result.filter((r: { success: unknown }) => !r.success);
         throw new Error(
           `Failed to process files: ${failures
-            .map((f: { path: any }) => f.path)
+            .map((f: { path: unknown }) => f.path)
             .join(", ")}`
         );
       }

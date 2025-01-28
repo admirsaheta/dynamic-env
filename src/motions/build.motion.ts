@@ -1,8 +1,8 @@
 import {
   CommandLineAction,
-  CommandLineChoiceParameter,
-  CommandLineRemainder,
-  CommandLineStringListParameter,
+  type CommandLineChoiceParameter,
+  type CommandLineRemainder,
+  type CommandLineStringListParameter,
 } from "@rushstack/ts-command-line";
 import type {
   EnvironmentProvider,
@@ -131,7 +131,9 @@ export class BuildMotion extends CommandLineAction implements BuildParameters {
     config: Record<string, string>
   ): Record<string, string> {
     const filtered: Record<string, string> = { ...config };
-    this.bypassVars.forEach((key) => delete filtered[key]);
+    for (const key of this.bypassVars) {
+      delete filtered[key];
+    }
     return filtered;
   }
 }
