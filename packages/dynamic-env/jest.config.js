@@ -3,6 +3,9 @@ export default {
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   testMatch: ['**/src/**/__tests__/**/*.[jt]s?(x)', '**/src/**/?(*.)+(spec|test).[tj]s?(x)'],
+  transformIgnorePatterns: [
+    "node_modules/(?!(ajv|ajv-draft-04)/)"
+  ],
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',

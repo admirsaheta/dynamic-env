@@ -45,10 +45,13 @@ describe("BuildMotion", () => {
   describe("constructor", () => {
     it("should initialize with default dependencies", () => {
       buildMotion = new BuildMotion();
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(buildMotion["environmentProvider"]).toBeInstanceOf(
         EnvironmentUtils
       );
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(buildMotion["fileHandler"]).toBeInstanceOf(FileUtils);
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(buildMotion["parsingUtils"]).toBeInstanceOf(ParsingUtils);
     });
 
@@ -58,8 +61,11 @@ describe("BuildMotion", () => {
         mockFileHandler,
         mockParsingUtils
       );
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(buildMotion["environmentProvider"]).toBe(mockEnvironmentProvider);
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(buildMotion["fileHandler"]).toBe(mockFileHandler);
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(buildMotion["parsingUtils"]).toBe(mockParsingUtils);
     });
 
@@ -79,6 +85,7 @@ describe("BuildMotion", () => {
 
     it("should define command remainder parameter correctly", () => {
       buildMotion = new BuildMotion();
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       const commandParam = buildMotion["_command"];
 
       expect(commandParam).toBeInstanceOf(CommandLineRemainder);
@@ -92,8 +99,11 @@ describe("BuildMotion", () => {
       const motion1 = new BuildMotion();
       const motion2 = new BuildMotion();
 
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(motion1["_command"]).not.toBe(motion2["_command"]);
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(motion1["_dotEnvEnabled"]).not.toBe(motion2["_dotEnvEnabled"]);
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(motion1["_bypassVars"]).not.toBe(motion2["_bypassVars"]);
     });
 
@@ -106,17 +116,23 @@ describe("BuildMotion", () => {
 
     it("should initialize with partial dependencies", () => {
       const motionWithEnvOnly = new BuildMotion(mockEnvironmentProvider);
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(motionWithEnvOnly["environmentProvider"]).toBe(
         mockEnvironmentProvider
       );
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(motionWithEnvOnly["fileHandler"]).toBeInstanceOf(FileUtils);
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(motionWithEnvOnly["parsingUtils"]).toBeInstanceOf(ParsingUtils);
 
       const motionWithFileOnly = new BuildMotion(undefined, mockFileHandler);
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(motionWithFileOnly["environmentProvider"]).toBeInstanceOf(
         EnvironmentUtils
       );
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(motionWithFileOnly["fileHandler"]).toBe(mockFileHandler);
+      // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(motionWithFileOnly["parsingUtils"]).toBeInstanceOf(ParsingUtils);
     });
   });

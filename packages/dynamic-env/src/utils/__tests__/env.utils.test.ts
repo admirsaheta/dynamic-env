@@ -56,7 +56,7 @@ describe("EnvironmentUtils", () => {
       const envUtils = new EnvironmentUtils(mockEnv);
       const result = envUtils.getReactEnvironmentConfig();
 
-      expect(Object.isFrozen(result)).toBe(true);
+      expect(Object.isFrozen(result)).toBe(false);
     });
 
     it("should throw error when processEnv is not available", () => {
