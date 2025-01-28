@@ -24,7 +24,10 @@ jobs:
           bun-version: latest
  
       - name: Install dependencies
-        run: bun install
+        run: |
+          bun install
+          cd examples && bun install && cd ..
+          cd docs && bun install && cd ..
  
       - name: Build
         run: bun run build
