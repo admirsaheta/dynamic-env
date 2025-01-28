@@ -11,3 +11,8 @@ dist/
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# Turbo
+.turbo/cache
+.turbo/cookies
+.turbo/deamon

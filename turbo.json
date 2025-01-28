@@ -5,11 +5,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [
-        "dist/**",
-        ".rspress/dist/**",
-        ".examples/dist/**"
-      ]
+      "outputs": ["dist/**", "docs/doc_build/**", "examples/dist/**"]
     },
     "dev": {
       "cache": false,
