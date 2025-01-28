@@ -33,7 +33,12 @@ jobs:
           bun install
           cd packages/dynamic-env && bun install && cd ../..
           cd examples && bun install && cd ..
-          cd docs && npm install && cd ..
+          cd docs && pnpm install && cd ..
+ 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
  
       - name: Build lib
         run: cd packages/dynamic-env && bun run build && cd ../..
@@ -42,7 +47,7 @@ jobs:
         run: cd examples && bun run build && cd ..
  
       - name: Build docs
-        run: cd docs && npm run build && cd ..
+        run: cd docs && pnpm run build && cd ..
  
       - name: Test
         run: cd packages/dynamic-env && bun run test
