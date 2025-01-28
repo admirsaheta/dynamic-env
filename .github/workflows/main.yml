@@ -30,19 +30,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          bun install
-          cd packages/dynamic-env && bun install && cd ../..
-          cd examples && bun install && cd ..
+          pnpm install
+          cd packages/dynamic-env && pnpm install && cd ../..
+          cd examples && pnpm install && cd ..
           cd docs && pnpm install && cd ..
 
       - name: Build lib
-        run: cd packages/dynamic-env && bun run build && cd ../..
+        run: cd packages/dynamic-env && pnpm run build && cd ../..
 
       - name: Build examples
-        run: cd examples && bun run build && cd ..
+        run: cd examples && pnpm run build && cd ..
 
       - name: Build docs
         run: cd docs && pnpm run build && cd ..
 
       - name: Test
-        run: cd packages/dynamic-env && bun run test
+        run: cd packages/dynamic-env && pnpm run test
