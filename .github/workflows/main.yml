@@ -28,7 +28,6 @@ jobs:
           bun install --no-save
           cd packages/dynamic-env && bun install --no-save && cd ../..
           cd examples && bun install --no-save && cd ..
-          cd docs && bun install --no-save && cd ..
 
       - name: Build lib
         run: cd packages/dynamic-env && NODE_ENV=production bun run build && cd ../..
@@ -36,8 +35,6 @@ jobs:
       - name: Build examples
         run: cd examples && NODE_ENV=production bun run build && cd ..
 
-      - name: Build docs
-        run: cd docs && NODE_ENV=production bun run build && cd ..
 
       - name: Test
         run: cd packages/dynamic-env && bun run test
