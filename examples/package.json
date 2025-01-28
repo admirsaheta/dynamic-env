@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@spacier/dynamic-env": "^1.0.8",
+    "@spacier/dynamic-env": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
