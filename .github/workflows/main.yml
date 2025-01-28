@@ -18,31 +18,26 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          version: 8
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+          bun-version: 1.0.25
 
       - name: Install dependencies
         run: |
-          pnpm install
-          cd packages/dynamic-env && pnpm install && cd ../..
-          cd examples && pnpm install && cd ..
-          cd docs && pnpm install && cd ..
+          bun install --no-save
+          cd packages/dynamic-env && bun install --no-save && cd ../..
+          cd examples && bun install --no-save && cd ..
+          cd docs && bun install --no-save && cd ..
 
       - name: Build lib
-        run: cd packages/dynamic-env && pnpm run build && cd ../..
+        run: cd packages/dynamic-env && NODE_ENV=production bun run build && cd ../..
 
       - name: Build examples
-        run: cd examples && pnpm run build && cd ..
+        run: cd examples && NODE_ENV=production bun run build && cd ..
 
       - name: Build docs
-        run: cd docs && pnpm run build && cd ..
+        run: cd docs && NODE_ENV=production bun run build && cd ..
 
       - name: Test
-        run: cd packages/dynamic-env && pnpm run test
+        run: cd packages/dynamic-env && bun run test
