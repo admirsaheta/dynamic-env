@@ -1,53 +1,48 @@
 name: CI
- 
+
 on:
   push:
     branches: ["master"]
   pull_request:
     types: [opened, synchronize]
- 
+
 jobs:
   build:
     name: Build and Test
     timeout-minutes: 15
     runs-on: ubuntu-latest
- 
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
- 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
-          bun-version: latest
+          version: 8
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
- 
+
       - name: Install dependencies
         run: |
           bun install
           cd packages/dynamic-env && bun install && cd ../..
           cd examples && bun install && cd ..
           cd docs && pnpm install && cd ..
- 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
- 
+
       - name: Build lib
         run: cd packages/dynamic-env && bun run build && cd ../..
- 
+
       - name: Build examples
         run: cd examples && bun run build && cd ..
- 
+
       - name: Build docs
         run: cd docs && pnpm run build && cd ..
- 
+
       - name: Test
         run: cd packages/dynamic-env && bun run test
